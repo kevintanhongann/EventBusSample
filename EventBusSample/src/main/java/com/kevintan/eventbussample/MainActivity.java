@@ -1,80 +1,109 @@
 package com.kevintan.eventbussample;
 
+import com.kevintan.eventbussample.bus.MoveToFragmentEvent;
+import com.kevintan.eventbussample.bus.StickyEvent;
+import com.kevintan.eventbussample.bus.UpdateActionBarTitleEvent;
+import com.kevintan.eventbussample.data.DataObject;
+import com.kevintan.eventbussample.fragments.SecondFragment;
+import com.kevintan.eventbussample.fragments.ThirdFragment;
+
 import android.app.Activity;
-import android.app.ActionBar;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.os.Build;
-import android.widget.Button;
-
 import de.greenrobot.event.EventBus;
 
+/**
+ * Sample main {@link android.app.Activity}.
+ * <p/>
+ * Created by kevintanhongann.
+ * <p/>
+ * Update:
+ * <p/>
+ * 1. Added event-handler that updates title of {@link android.app.ActionBar}.
+ * <p/>
+ * 2. Added event-handler that controls showing {@link com.kevintan.eventbussample.fragments.SecondFragment}, {@link
+ * com.kevintan.eventbussample.fragments.ThirdFragment}.
+ * <p/>
+ * 3. Remove {@link com.kevintan.eventbussample.bus.StickyEvent} in {@link MainActivity#onDestroy()}.
+ * @author Xinyue Zhao
+ */
 public class MainActivity extends Activity {
+	private static final int LAYOUT = R.layout.activity_main;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+	/**
+	 * Handler for {@link com.kevintan.eventbussample.bus.UpdateActionBarTitleEvent}
+	 *
+	 * @param e
+	 * 		Event {@link  com.kevintan.eventbussample.bus.UpdateActionBarTitleEvent}.
+	 */
+	public void onEvent(UpdateActionBarTitleEvent e) {
+		getActionBar().setTitle(e.getTitle());
+	}
 
-        if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment())
-                    .commit();
-        }
-    }
+	/**
+	 * Handler for {@link com.kevintan.eventbussample.bus.MoveToFragmentEvent}
+	 *
+	 * @param e
+	 * 		Event {@link com.kevintan.eventbussample.bus.MoveToFragmentEvent }.
+	 */
+	public void onEvent(MoveToFragmentEvent e) {
+		if (e.getFragment() instanceof ThirdFragment) {
+			getFragmentManager().beginTransaction().replace(R.id.container, e.getFragment()).addToBackStack(null)
+					.commit();
+		} else if (e.getFragment() instanceof SecondFragment) {
+			DataObject object = new DataObject("kevin tan", "kevintan@kevintan.com");
+			EventBus.getDefault().postSticky(new StickyEvent(object));
+			getFragmentManager().beginTransaction().replace(R.id.container, e.getFragment()).addToBackStack(null)
+					.commit();
+		}
+	}
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(LAYOUT);
+		EventBus.getDefault().register(this);
+		if (savedInstanceState == null) {
+			getFragmentManager().beginTransaction()
+					.add(R.id.container, new PlaceholderFragment())
+					.commit();
+		}
+	}
+
+	@Override
+	protected void onDestroy() {
+		EventBus.getDefault().unregister(this);
+		EventBus.getDefault().removeStickyEvent(StickyEvent.class);
+		super.onDestroy();
+	}
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
+	/**
+	 * A placeholder fragment containing a simple view.
+	 */
+	public static class PlaceholderFragment extends Fragment {
+		private static final int LAYOUT = R.layout.fragment_main;
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        switch (item.getItemId()) {
-            case R.id.action_settings:
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+		public PlaceholderFragment() {
+		}
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-
-        Button mTestBtn;
-
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-
-            mTestBtn = (Button) rootView.findViewById(R.id.btn_test);
-            mTestBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    SecondFragment secondFragment = new SecondFragment();
-                    TestObject object = new TestObject("kevin tan", "kevintan@kevintan.com");
-                    getFragmentManager().beginTransaction().replace(R.id.container, secondFragment).addToBackStack(null).commit();
-                    EventBus.getDefault().postSticky(new TestEvent(object));
-                }
-            });
-            return rootView;
-        }
-    }
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container,
+		                         Bundle savedInstanceState) {
+			EventBus.getDefault().post(new UpdateActionBarTitleEvent(getString(R.string.screen_1)));
+			View rootView = inflater.inflate(LAYOUT, container, false);
+			View testBtn = rootView.findViewById(R.id.btn_test);
+			testBtn.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					EventBus.getDefault().post(new MoveToFragmentEvent(new SecondFragment()));
+				}
+			});
+			return rootView;
+		}
+	}
 
 }
