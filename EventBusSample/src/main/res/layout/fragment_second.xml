@@ -4,6 +4,14 @@
 		android:layout_height="match_parent">
 
 	<Button
+			android:id="@+id/normal_event_btn"
+			android:layout_centerHorizontal="true"
+			android:layout_above="@+id/update_event_btn"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/btn_normal_event" />
+
+	<Button
 			android:id="@+id/update_event_btn"
 			android:layout_centerInParent="true"
 			android:layout_width="wrap_content"

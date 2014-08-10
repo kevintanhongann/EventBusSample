@@ -14,13 +14,22 @@ import de.greenrobot.event.EventBus;
  * <p/>
  * Also update title on {@link android.app.ActionBar}.
  * <p/>
- * Demonstrate override of {@link EventBus}.
+ * Demonstrate override of {@link EventBus} which is very different from <a href="http://square.github.io/otto/">Otto
+ * Bus</a>.
  */
 public final class ThirdFragment extends SecondFragment {
+	/**
+	 * Overwritten version of {@link com.kevintan.eventbussample.fragments.SecondFragment#onEvent(com.kevintan.eventbussample.bus.StickyEvent)}
+	 * to demonstrate advantage of {@link de.greenrobot.event.EventBus} which is very different from <a
+	 * href="http://square.github.io/otto/">Otto Bus</a>.
+	 *
+	 * @param _stickyEvent
+	 * 		A {@link com.kevintan.eventbussample.bus.StickyEvent}.
+	 */
 	@Override
 	public void onEvent(StickyEvent _stickyEvent) {
 		Button updateBtn = (Button) getView().findViewById(R.id.update_event_btn);
-		updateBtn.setText(_stickyEvent.getDataObject().toString());
+		updateBtn.setText(String.format("Override onEvent\n%s", _stickyEvent.getDataObject().toString()));
 	}
 
 	@Override

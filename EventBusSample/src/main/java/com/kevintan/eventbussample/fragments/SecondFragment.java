@@ -2,11 +2,11 @@ package com.kevintan.eventbussample.fragments;
 
 import com.kevintan.eventbussample.R;
 import com.kevintan.eventbussample.bus.MoveToFragmentEvent;
+import com.kevintan.eventbussample.bus.NormalEvent;
 import com.kevintan.eventbussample.bus.StickyEvent;
 import com.kevintan.eventbussample.bus.UpdateActionBarTitleEvent;
 import com.kevintan.eventbussample.data.DataObject;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,10 +35,13 @@ import de.greenrobot.event.EventBus;
  * <p/>
  * 5. Move calling {@link de.greenrobot.event.EventBus#removeStickyEvent(Class)} on {@link
  * com.kevintan.eventbussample.bus.StickyEvent} into {@link com.kevintan.eventbussample.MainActivity#onDestroy()}.
+ * <p/>
+ * 6. Extends from {@link com.kevintan.eventbussample.fragments.BaseFragment} to demonstrate coexistence of {@link
+ * de.greenrobot.event.EventBus#registerSticky(Object)} and {@link de.greenrobot.event.EventBus#register(Object)}.
  *
  * @author Xinyue Zhao
  */
-public class SecondFragment extends Fragment {
+public class SecondFragment extends BaseFragment {
 	private static final int LAYOUT = R.layout.fragment_second;
 
 	/**
@@ -48,20 +51,20 @@ public class SecondFragment extends Fragment {
 	 * 		Event {@link StickyEvent}.
 	 */
 	public void onEvent(StickyEvent e) {
-		Toast.makeText(getActivity(), e.getDataObject().toString(), Toast.LENGTH_SHORT).show();
+		Toast.makeText(getActivity(), String.format("Sticky handler: %s", e.getDataObject().toString()), Toast.LENGTH_SHORT).show();
 	}
 
-	@Override
-	public void onResume() {
-		EventBus.getDefault().registerSticky(this, StickyEvent.class);
-		super.onResume();
+	/**
+	 * Handler for {@link com.kevintan.eventbussample.bus.NormalEvent}
+	 *
+	 * @param e
+	 * 		Event {@link  com.kevintan.eventbussample.bus.NormalEvent}.
+	 */
+	public void onEvent(NormalEvent e) {
+		Toast.makeText(getActivity(), R.string.msg_normal_event, Toast.LENGTH_SHORT).show();
 	}
 
-	@Override
-	public void onPause() {
-		EventBus.getDefault().unregister(this);
-		super.onPause();
-	}
+
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -79,8 +82,14 @@ public class SecondFragment extends Fragment {
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		View updateBtn = view.findViewById(R.id.update_event_btn);
-		updateBtn.setOnClickListener(new View.OnClickListener() {
+		view.findViewById(R.id.normal_event_btn).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				EventBus.getDefault().post(new NormalEvent());
+			}
+		});
+
+		view.findViewById(R.id.update_event_btn).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				/*Update the sticky, LOOK the postSticky() runs including post() that onEvent(StickyEvent e) will be called late.*/
@@ -91,8 +100,7 @@ public class SecondFragment extends Fragment {
 			}
 		});
 
-		View thirdFrgBtn = view.findViewById(R.id.next_btn);
-		thirdFrgBtn.setOnClickListener(new View.OnClickListener() {
+		view.findViewById(R.id.next_btn).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				/*Move to 3rd fragment.*/

@@ -4,11 +4,11 @@ import com.kevintan.eventbussample.bus.MoveToFragmentEvent;
 import com.kevintan.eventbussample.bus.StickyEvent;
 import com.kevintan.eventbussample.bus.UpdateActionBarTitleEvent;
 import com.kevintan.eventbussample.data.DataObject;
+import com.kevintan.eventbussample.fragments.BaseFragment;
 import com.kevintan.eventbussample.fragments.SecondFragment;
 import com.kevintan.eventbussample.fragments.ThirdFragment;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +28,7 @@ import de.greenrobot.event.EventBus;
  * com.kevintan.eventbussample.fragments.ThirdFragment}.
  * <p/>
  * 3. Remove {@link com.kevintan.eventbussample.bus.StickyEvent} in {@link MainActivity#onDestroy()}.
+ *
  * @author Xinyue Zhao
  */
 public class MainActivity extends Activity {
@@ -83,8 +84,13 @@ public class MainActivity extends Activity {
 
 	/**
 	 * A placeholder fragment containing a simple view.
+	 * <p/>
+	 * Update:
+	 * <p/>
+	 * Extends from {@link com.kevintan.eventbussample.fragments.BaseFragment} to demonstrate coexistence between {@link
+	 * de.greenrobot.event.EventBus#registerSticky(Object)} and {@link de.greenrobot.event.EventBus#register(Object)}.
 	 */
-	public static class PlaceholderFragment extends Fragment {
+	public static class PlaceholderFragment extends BaseFragment {
 		private static final int LAYOUT = R.layout.fragment_main;
 
 		public PlaceholderFragment() {
@@ -93,6 +99,7 @@ public class MainActivity extends Activity {
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 		                         Bundle savedInstanceState) {
+			/* Update fragment's title.*/
 			EventBus.getDefault().post(new UpdateActionBarTitleEvent(getString(R.string.screen_1)));
 			View rootView = inflater.inflate(LAYOUT, container, false);
 			View testBtn = rootView.findViewById(R.id.btn_test);

@@ -4,9 +4,11 @@
 	<string name="app_name">EventBusSample</string>
 	<string name="hello_world">Hello world!</string>
 	<string name="action_settings">Settings</string>
+	<string name="btn_normal_event">Send normal Event</string>
 	<string name="btn_update_event">Update Event</string>
 	<string name="btn_next">Move to 3rd Fragment.</string>
 	<string name="screen_1">Fragment 1</string>
 	<string name="screen_2">Fragment 2</string>
 	<string name="screen_3">Fragment 3</string>
+	<string name="msg_normal_event">A normal event.</string>
 </resources>
