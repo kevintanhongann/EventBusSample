@@ -1,3 +1,5 @@
+Sample to demonstrate [EventBus][1] which has inited by https://github.com/kevintanhongann/EventBusSample
+
 This Fork
 ---------
 
@@ -9,3 +11,6 @@ Added a 3rd fragment to demonstrate more about normal events and sticky-events.
 3. Use postSticky() to update StickyEvent.
 4. Update .gitignore and git-rm some objects.
 5. Added BaseFragment to demonstrate coexistence between register and registerSticky.
+
+
+  [1]: https://github.com/greenrobot/EventBus
