@@ -11,6 +11,9 @@ import de.greenrobot.event.EventBus;
  * <p/>
  * {@link com.kevintan.eventbussample.fragments.BaseFragment#onEvent(Object)} to tricky {@link
  * de.greenrobot.event.EventBusException} for a least one subscribed method "onEvent".
+ * <p/>
+ * Added {@link com.kevintan.eventbussample.fragments.BaseFragment#isStickyAvailable()} for subclasses whether using
+ * sticky-mode or normal.
  */
 public abstract class BaseFragment extends Fragment {
 	/**
@@ -25,7 +28,11 @@ public abstract class BaseFragment extends Fragment {
 
 	@Override
 	public void onResume() {
-		EventBus.getDefault().registerSticky(this);
+		if (isStickyAvailable()) {
+			EventBus.getDefault().registerSticky(this);
+		} else {
+			EventBus.getDefault().register(this);
+		}
 		super.onResume();
 	}
 
@@ -33,5 +40,16 @@ public abstract class BaseFragment extends Fragment {
 	public void onPause() {
 		EventBus.getDefault().unregister(this);
 		super.onPause();
+	}
+
+	/**
+	 * Is the {@link android.app.Fragment} ready to subscribe a sticky-event or not.
+	 *
+	 * @return {@code true} if the {@link android.app.Fragment}  available for sticky-events inc. normal events.
+	 * <p/>
+	 * <b>Default is {@code false}</b>.
+	 */
+	protected boolean isStickyAvailable() {
+		return false;
 	}
 }

@@ -5,6 +5,7 @@ import com.kevintan.eventbussample.bus.StickyEvent;
 import com.kevintan.eventbussample.bus.UpdateActionBarTitleEvent;
 import com.kevintan.eventbussample.data.DataObject;
 import com.kevintan.eventbussample.fragments.BaseFragment;
+import com.kevintan.eventbussample.fragments.NoStickyFragment;
 import com.kevintan.eventbussample.fragments.SecondFragment;
 import com.kevintan.eventbussample.fragments.ThirdFragment;
 
@@ -59,6 +60,11 @@ public class MainActivity extends Activity {
 			EventBus.getDefault().postSticky(new StickyEvent(object));
 			getFragmentManager().beginTransaction().replace(R.id.container, e.getFragment()).addToBackStack(null)
 					.commit();
+		} else if (e.getFragment() instanceof NoStickyFragment) {
+			DataObject object = new DataObject("Hello, world!", "www.github.com");
+			EventBus.getDefault().postSticky(new StickyEvent(object));
+			getFragmentManager().beginTransaction().replace(R.id.container, e.getFragment()).addToBackStack(null)
+					.commit();
 		}
 	}
 
@@ -102,13 +108,21 @@ public class MainActivity extends Activity {
 			/* Update fragment's title.*/
 			EventBus.getDefault().post(new UpdateActionBarTitleEvent(getString(R.string.screen_1)));
 			View rootView = inflater.inflate(LAYOUT, container, false);
-			View testBtn = rootView.findViewById(R.id.btn_test);
-			testBtn.setOnClickListener(new View.OnClickListener() {
+			/* Move to fragment that can demonstrate sticky-event. */
+			rootView.findViewById(R.id.btn_test).setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					EventBus.getDefault().post(new MoveToFragmentEvent(new SecondFragment()));
 				}
 			});
+			/* Move to fragment that can not accept sticky-event. */
+			rootView.findViewById(R.id.btn_no_sticky).setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					EventBus.getDefault().post(new MoveToFragmentEvent(new NoStickyFragment()));
+				}
+			});
+
 			return rootView;
 		}
 	}

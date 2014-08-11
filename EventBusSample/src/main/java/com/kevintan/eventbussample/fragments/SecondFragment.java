@@ -108,4 +108,9 @@ public class SecondFragment extends BaseFragment {
 			}
 		});
 	}
+
+	@Override
+	protected boolean isStickyAvailable() {
+		return true;
+	}
 }
