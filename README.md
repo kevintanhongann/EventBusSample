@@ -11,6 +11,6 @@ Added a 3rd fragment to demonstrate more about normal events and sticky-events.
 3. Use postSticky() to update StickyEvent.
 4. Update .gitignore and git-rm some objects.
 5. Added BaseFragment to demonstrate coexistence between register and registerSticky.
-
+6. Added NoStickyFragment that can handle normal event but unavailable for stickies.
 
   [1]: https://github.com/greenrobot/EventBus
