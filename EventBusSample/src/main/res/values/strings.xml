@@ -15,4 +15,5 @@
 	<string name="screen_4">Fragment 4</string>
 	<string name="msg_normal_event">A normal event.</string>
 	<string name="msg_cant_accept_sticky">I am waiting for a sticky, but it might not OK, when the sticky does not come, I can not refresh text.</string>
+    <string name="btn_simple_event">Simple Event(no onEvent() but onSimpleEvent())</string>
 </resources>

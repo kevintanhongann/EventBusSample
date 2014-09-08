@@ -1,15 +1,19 @@
 package com.kevintan.eventbussample.fragments;
 
-import com.kevintan.eventbussample.R;
-import com.kevintan.eventbussample.bus.NormalEvent;
-import com.kevintan.eventbussample.bus.StickyEvent;
-import com.kevintan.eventbussample.bus.UpdateActionBarTitleEvent;
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.kevintan.eventbussample.R;
+import com.kevintan.eventbussample.bus.NormalEvent;
+import com.kevintan.eventbussample.bus.SimpleEvent;
+import com.kevintan.eventbussample.bus.StickyEvent;
+import com.kevintan.eventbussample.bus.UpdateActionBarTitleEvent;
+
 import de.greenrobot.event.EventBus;
 
 /**
@@ -43,6 +47,16 @@ public final class NoStickyFragment extends BaseFragment {
 
 	}
 
+	/**
+	 * Handler for {@link com.kevintan.eventbussample.bus.SimpleEvent}.
+	 *
+	 * @param e
+	 * 		Event {@link com.kevintan.eventbussample.bus.SimpleEvent}.
+	 */
+	public void onSimpleEvent(SimpleEvent e) {
+		Toast.makeText(getActivity(),"onSimpleEvent handling SimpleEvent", Toast.LENGTH_LONG).show();
+	}
+
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -62,5 +76,18 @@ public final class NoStickyFragment extends BaseFragment {
 				EventBus.getDefault().post(new NormalEvent());
 			}
 		});
+
+		view.findViewById(R.id.simple_event_btn).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				EventBus.getDefault().post(new SimpleEvent());
+			}
+		});
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		EventBus.getDefault().register(this, "onSimpleEvent");
 	}
 }
