@@ -1,8 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">EventBusSample</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
-
+	<string name="app_name">EventBusSample</string>
+	<string name="hello_world">Hello world!</string>
+	<string name="action_settings">Settings</string>
+	<string name="btn_normal_event">Send normal Event</string>
+	<string name="btn_update_event">Update Event</string>
+	<string name="btn_next">Move to 3rd Fragment.</string>
+	<string name="btn_sec_fragment">Move to Second Fragment</string>
+	<string name="btn_no_sticky_fragment">Move to no a sticky Fragment</string>
+	<string name="screen_1">Fragment 1</string>
+	<string name="screen_2">Fragment 2</string>
+	<string name="screen_3">Fragment 3</string>
+	<string name="screen_4">Fragment 4</string>
+	<string name="msg_normal_event">A normal event.</string>
+	<string name="msg_cant_accept_sticky">I am waiting for a sticky, but it might not OK, when the sticky does not come, I can not refresh text.</string>
+    <string name="btn_simple_event">Simple Event(no onEvent() but onSimpleEvent())</string>
 </resources>
